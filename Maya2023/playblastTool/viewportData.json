@@ -1,0 +1,104 @@
+{
+  "viewport_settings": [
+    {
+      "property_name": "grid",
+      "name": "Grid",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "polymeshes",
+      "name": "Polymesh",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "joints",
+      "name": "Joints",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "nurbsCurves",
+      "name": "Nurbs Curves",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "nurbsSurfaces",
+      "name": "Nurbs Surfaces",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "manipulators",
+      "name": "manipulators",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "pivots",
+      "name": "Pivots",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "locators",
+      "name": "locators",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "displayAppearance",
+      "name": "Display Appearance",
+      "data_type": "list",
+      "default_value": "smoothShaded",
+      "current_value": "smoothShaded",
+      "allValues": ["smoothShaded", "wireframe", "boundingBox", "flastShaded"],
+      "exposed": true
+    },
+    {
+      "property_name": "textures",
+      "name": "Textures",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
+      "property_name": "displayLights",
+      "name": "Display Lights",
+      "data_type": "list",
+      "default_value": "default",
+      "current_value": "default",
+      "allValues": ["default", "all"],
+      "exposed": true
+    }
+  ]
+}
+
