@@ -61,17 +61,17 @@ def getSavedVPSettings():
     return currUISettings
 
 
-def createPlayblastEditor():
+def createPlayblastEditor(resolution):
     """
     :return:
     """
-    width = playblastSettings["width"][0]
-    height = playblastSettings["height"][0]
+    width = resolution[0]
+    height = resolution[1]
     window = cmds.window(title='Playblast View', widthHeight=(width, height))
     cmds.paneLayout(configuration="single")
     modelEditor = cmds.modelEditor(camera="persp")
     cmds.showWindow(window)
-    return modelEditor
+    return modelEditor, window
 
 
 def updateModelEditor(pbModelEditor, vpSettings):
@@ -100,6 +100,24 @@ def updateModelEditor(pbModelEditor, vpSettings):
 def createCustomHud(hudText=None):
     pass
 
+def createPBName(cameraName, frameRange):
+    """
+
+    :return:
+    """
+    scene_name = cmds.file(query=True, sceneName=True, shn=True).split(".")[0] or "Untitled"
+
+    # Sanitize camera name as it can have a ton of special characters which
+    # might not be allowed to use in Windows file names.
+
+    fileName = "{0}_{1}_{2}_{3}".format(scene_name,
+                                        cameraName,
+                                        int(frameRange[0]),
+                                        int(frameRange[1]))
+
+    # ToDo: Sanitize file name to remove special chars
+    return fileName
+
 
 def filterSettings(vpSettingsUI):
     """
@@ -109,7 +127,6 @@ def filterSettings(vpSettingsUI):
     """
     filteredSettings = {}
     for jSetting in viewport_settings_data:
-        print(jSetting)
         if jSetting['name'] in vpSettingsUI.keys():
             filteredSettings[jSetting['property_name']] = vpSettingsUI[
                 jSetting['name']]
@@ -119,10 +136,19 @@ def filterSettings(vpSettingsUI):
 
     return filteredSettings
 
+def postPBCleanup(modelEditor, pbWindow, defaultHardwareSettings=None):
+    """
 
-def doBlast(camera, vpSettingsUI, fileName, filePath, format, frameRange,
-            playPB=True, quality=100, ornaments=True, offScreen=False,
-            pbResolution=[1920, 1080]):
+    :param modelEditor:
+    :param defaultHardwareSettings:
+    :return:
+    """
+    cmds.deleteUI(modelEditor)
+    cmds.deleteUI(pbWindow)
+
+def doBlast(cameras, vpSettingsUI, filePath, format, frameRangeList,
+            frameRate=30, playPB=True, quality=100, ornaments=True,
+            offScreen=False, pbResolution=[1920, 1080], hud=True ):
     """
     This function does the following
     :param frameRange:
@@ -133,20 +159,27 @@ def doBlast(camera, vpSettingsUI, fileName, filePath, format, frameRange,
     :return:
     """
     vpSettings = filterSettings(vpSettingsUI)
-    # try:
-    pbModelEditor = createPlayblastEditor()
-    updateModelEditor(pbModelEditor, vpSettings)
-    # except Exception as e:
-    #     print(e)
-    # cmds.modelEditor(pbModelEditor, e=True, av=True)
+    pbModelEditor, pbWindow = createPlayblastEditor(pbResolution)
 
-    # cmds.playblast(epn=pbModelEditor,
-    #                filename=r'C:\temp\playblast\test',
-    #                format='',
-    #                offScreen=False,
-    #                quality='100',
-    #                startTime=0,
-    #                endTime=200,
-    #                viewer=True,
-    #                useTraxSounds=True,
-    #                )
+    updateModelEditor(pbModelEditor, vpSettings)
+
+    for frameRange in frameRangeList:
+        for cam in cameras:
+            fileName = createPBName(cam, frameRange)
+            cmds.modelEditor(pbModelEditor, e=True, av=True, cam=cam)
+            try:
+                cmds.playblast(epn=pbModelEditor,
+                               filename=os.path.join(filePath, fileName),
+                               format=format,
+                               offScreen=offScreen,
+                               quality=100,
+                               startTime=int(frameRange[0]),
+                               endTime=int(frameRange[1]),
+                               viewer=playPB,
+                               useTraxSounds=True,
+                               cc=True
+                               )
+            except Exception as e:
+                print(e)
+
+    postPBCleanup(pbModelEditor, pbWindow)

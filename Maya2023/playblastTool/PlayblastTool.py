@@ -202,9 +202,9 @@ class PBTool(QMainWindow):
         :return: Int : Frame Rate from the UI
         """
         if self.ui.fps30RB.isChecked():
-            return 30
+            return "ntsc"
         if self.ui.fps60RB.isChecked():
-            return 60
+            return "ntscf"
 
     def getExtension(self):
         """
@@ -245,29 +245,6 @@ class PBTool(QMainWindow):
                     rowPos, 1).currentText()
         return tableData
 
-    def createPBName(self, cameraName, frameRange):
-        """
-
-        :return:
-        """
-        scene_name = cmds.file(query=True, sceneName=True, shn=True).split(".")[0] or "Untitled"
-
-        # Sanitize camera name as it can have a ton of special characters which
-        # might not be allowed to use in Windows file names.
-
-        fileName = "{0}_{1}_{2}_{3}".format(scene_name,
-                                            cameraName,
-                                            int(frameRange[0]),
-                                            int(frameRange[1]))
-
-        # ToDo: Sanitize file name to remove special chars
-
-        return fileName
-
-
-
-
-
 
     def playblastData(self):
         """
@@ -282,20 +259,17 @@ class PBTool(QMainWindow):
         pbResolution = self.getResolution()
         vpSettingsUI = self.getVPSettings()
 
-        for frameRange in frameRangeList:
-            for cam in cameraList:
-                fileName = self.createPBName(cam, frameRange)
-                PlayblastCore.doBlast(camera=cam,
-                                      frameRange=frameRange,
-                                      filePath=filePath,
-                                      fileName=fileName,
-                                      pbResolution=pbResolution,
-                                      format=pbFormat,
-                                      quality=100,
-                                      playPB=True,
-                                      offScreen=False,
-                                      ornaments=False,
-                                      vpSettingsUI=vpSettingsUI)
+        PlayblastCore.doBlast(cameras=cameraList,
+                              frameRangeList=frameRangeList,
+                              filePath=filePath,
+                              pbResolution=pbResolution,
+                              format=pbFormat,
+                              quality=100,
+                              playPB=True,
+                              offScreen=False,
+                              ornaments=False,
+                              hud=True,
+                              vpSettingsUI=vpSettingsUI)
 
 
     def eventFilter(self, source, event):
