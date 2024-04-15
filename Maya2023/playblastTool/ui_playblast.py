@@ -23,282 +23,6 @@ importlib.reload(CustomWidgets)
 
 from CustomWidgets import CheckableCombobox
 
-
-# class Ui_MainWindow(object):
-#     def setupUi(self, MainWindow):
-#         if MainWindow.objectName():
-#             MainWindow.setObjectName(u"MainWindow")
-#         MainWindow.resize(490, 600)
-#         self.centralwidget = QWidget(MainWindow)
-#         self.centralwidget.setObjectName(u"centralwidget")
-#         sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-#         sizePolicy.setHorizontalStretch(0)
-#         sizePolicy.setVerticalStretch(0)
-#         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
-#         self.centralwidget.setSizePolicy(sizePolicy)
-#         self.layoutWidget = QWidget(self.centralwidget)
-#         self.layoutWidget.setObjectName(u"layoutWidget")
-#         self.layoutWidget.setGeometry(QRect(0, 0, 486, 441))
-#         self.verticalLayout_4 = QVBoxLayout(self.layoutWidget)
-#         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-#         self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
-#         self.playblastGB = QGroupBox(self.layoutWidget)
-#         self.playblastGB.setObjectName(u"playblastGB")
-#         sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
-#         sizePolicy1.setHorizontalStretch(0)
-#         sizePolicy1.setVerticalStretch(0)
-#         sizePolicy1.setHeightForWidth(self.playblastGB.sizePolicy().hasHeightForWidth())
-#         self.playblastGB.setSizePolicy(sizePolicy1)
-#         self.verticalLayout = QVBoxLayout(self.playblastGB)
-#         self.verticalLayout.setObjectName(u"verticalLayout")
-#         self.horizontalLayout_2 = QHBoxLayout()
-#         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-#         self.pbCameras = QLabel(self.playblastGB)
-#         self.pbCameras.setObjectName(u"pbCameras")
-#         sizePolicy2 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Maximum)
-#         sizePolicy2.setHorizontalStretch(0)
-#         sizePolicy2.setVerticalStretch(0)
-#         sizePolicy2.setHeightForWidth(self.pbCameras.sizePolicy().hasHeightForWidth())
-#         self.pbCameras.setSizePolicy(sizePolicy2)
-#
-#         self.horizontalLayout_2.addWidget(self.pbCameras)
-#
-#         self.cameraComboBox = CheckableCombobox(self.playblastGB)
-#         self.cameraComboBox.setObjectName(u"cameraComboBox")
-#         sizePolicy3 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
-#         sizePolicy3.setHorizontalStretch(0)
-#         sizePolicy3.setVerticalStretch(0)
-#         sizePolicy3.setHeightForWidth(self.cameraComboBox.sizePolicy().hasHeightForWidth())
-#         self.cameraComboBox.setSizePolicy(sizePolicy3)
-#
-#         self.horizontalLayout_2.addWidget(self.cameraComboBox)
-#
-#         self.refreshCamerasButton = QPushButton(self.playblastGB)
-#         self.refreshCamerasButton.setObjectName(u"refreshCamerasButton")
-#         sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
-#         sizePolicy4.setHorizontalStretch(0)
-#         sizePolicy4.setVerticalStretch(0)
-#         sizePolicy4.setHeightForWidth(self.refreshCamerasButton.sizePolicy().hasHeightForWidth())
-#         self.refreshCamerasButton.setSizePolicy(sizePolicy4)
-#
-#         self.horizontalLayout_2.addWidget(self.refreshCamerasButton)
-#
-#
-#         self.verticalLayout.addLayout(self.horizontalLayout_2)
-#
-#
-#         self.verticalLayout_4.addWidget(self.playblastGB)
-#
-#         self.blastSettingsGB = QGroupBox(self.layoutWidget)
-#         self.blastSettingsGB.setObjectName(u"blastSettingsGB")
-#         sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
-#         sizePolicy5.setHorizontalStretch(0)
-#         sizePolicy5.setVerticalStretch(0)
-#         sizePolicy5.setHeightForWidth(self.blastSettingsGB.sizePolicy().hasHeightForWidth())
-#         self.blastSettingsGB.setSizePolicy(sizePolicy5)
-#         self.verticalLayoutWidget = QWidget(self.blastSettingsGB)
-#         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-#         self.verticalLayoutWidget.setGeometry(QRect(1, 14, 481, 139))
-#         self.verticalLayout_5 = QVBoxLayout(self.verticalLayoutWidget)
-#         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
-#         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
-#         self.horizontalLayout_7 = QHBoxLayout()
-#         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
-#         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-#
-#         self.horizontalLayout_7.addItem(self.horizontalSpacer)
-#
-#         self.addSettingsButton = QPushButton(self.verticalLayoutWidget)
-#         self.addSettingsButton.setObjectName(u"addSettingsButton")
-#
-#         self.horizontalLayout_7.addWidget(self.addSettingsButton)
-#
-#         self.pushButton_2 = QPushButton(self.verticalLayoutWidget)
-#         self.pushButton_2.setObjectName(u"pushButton_2")
-#
-#         self.horizontalLayout_7.addWidget(self.pushButton_2)
-#
-#
-#         self.verticalLayout_5.addLayout(self.horizontalLayout_7)
-#
-#         self.scrollArea = QScrollArea(self.verticalLayoutWidget)
-#         self.scrollArea.setObjectName(u"scrollArea")
-#         self.scrollArea.setWidgetResizable(True)
-#         self.scrollAreaWidgetContents = QWidget()
-#         self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-#         self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 477, 104))
-#         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
-#
-#         self.verticalLayout_5.addWidget(self.scrollArea)
-#
-#
-#         self.verticalLayout_4.addWidget(self.blastSettingsGB)
-#
-#         self.blastProperties = QGroupBox(self.layoutWidget)
-#         self.blastProperties.setObjectName(u"blastProperties")
-#         sizePolicy1.setHeightForWidth(self.blastProperties.sizePolicy().hasHeightForWidth())
-#         self.blastProperties.setSizePolicy(sizePolicy1)
-#         self.verticalLayout_3 = QVBoxLayout(self.blastProperties)
-#         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-#         self.horizontalLayout_6 = QHBoxLayout()
-#         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
-#         self.resolutionGB = QGroupBox(self.blastProperties)
-#         self.resolutionGB.setObjectName(u"resolutionGB")
-#         sizePolicy1.setHeightForWidth(self.resolutionGB.sizePolicy().hasHeightForWidth())
-#         self.resolutionGB.setSizePolicy(sizePolicy1)
-#         self.horizontalLayout_3 = QHBoxLayout(self.resolutionGB)
-#         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
-#         self.lowQuality = QRadioButton(self.resolutionGB)
-#         self.lowQuality.setObjectName(u"lowQuality")
-#
-#         self.horizontalLayout_3.addWidget(self.lowQuality)
-#
-#         self.hdQuality = QRadioButton(self.resolutionGB)
-#         self.hdQuality.setObjectName(u"hdQuality")
-#
-#         self.horizontalLayout_3.addWidget(self.hdQuality)
-#
-#         self.fhdQuality = QRadioButton(self.resolutionGB)
-#         self.fhdQuality.setObjectName(u"fhdQuality")
-#
-#         self.horizontalLayout_3.addWidget(self.fhdQuality)
-#
-#
-#         self.horizontalLayout_6.addWidget(self.resolutionGB)
-#
-#         self.frameRateGB = QGroupBox(self.blastProperties)
-#         self.frameRateGB.setObjectName(u"frameRateGB")
-#         sizePolicy1.setHeightForWidth(self.frameRateGB.sizePolicy().hasHeightForWidth())
-#         self.frameRateGB.setSizePolicy(sizePolicy1)
-#         self.horizontalLayout_4 = QHBoxLayout(self.frameRateGB)
-#         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
-#         self.fps30 = QRadioButton(self.frameRateGB)
-#         self.fps30.setObjectName(u"fps30")
-#
-#         self.horizontalLayout_4.addWidget(self.fps30)
-#
-#         self.fps60 = QRadioButton(self.frameRateGB)
-#         self.fps60.setObjectName(u"fps60")
-#
-#         self.horizontalLayout_4.addWidget(self.fps60)
-#
-#
-#         self.horizontalLayout_6.addWidget(self.frameRateGB)
-#
-#         self.formatGB = QGroupBox(self.blastProperties)
-#         self.formatGB.setObjectName(u"formatGB")
-#         sizePolicy1.setHeightForWidth(self.formatGB.sizePolicy().hasHeightForWidth())
-#         self.formatGB.setSizePolicy(sizePolicy1)
-#         self.horizontalLayout_5 = QHBoxLayout(self.formatGB)
-#         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-#         self.radioButton = QRadioButton(self.formatGB)
-#         self.radioButton.setObjectName(u"radioButton")
-#
-#         self.horizontalLayout_5.addWidget(self.radioButton)
-#
-#         self.radioButton_2 = QRadioButton(self.formatGB)
-#         self.radioButton_2.setObjectName(u"radioButton_2")
-#
-#         self.horizontalLayout_5.addWidget(self.radioButton_2)
-#
-#
-#         self.horizontalLayout_6.addWidget(self.formatGB)
-#
-#
-#         self.verticalLayout_3.addLayout(self.horizontalLayout_6)
-#
-#
-#         self.verticalLayout_4.addWidget(self.blastProperties)
-#
-#         self.saveBlast = QGroupBox(self.layoutWidget)
-#         self.saveBlast.setObjectName(u"saveBlast")
-#         sizePolicy1.setHeightForWidth(self.saveBlast.sizePolicy().hasHeightForWidth())
-#         self.saveBlast.setSizePolicy(sizePolicy1)
-#         self.verticalLayout_2 = QVBoxLayout(self.saveBlast)
-#         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-#         self.horizontalLayout = QHBoxLayout()
-#         self.horizontalLayout.setObjectName(u"horizontalLayout")
-#         self.label = QLabel(self.saveBlast)
-#         self.label.setObjectName(u"label")
-#         sizePolicy6 = QSizePolicy(QSizePolicy.Maximum, QSizePolicy.Preferred)
-#         sizePolicy6.setHorizontalStretch(0)
-#         sizePolicy6.setVerticalStretch(0)
-#         sizePolicy6.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-#         self.label.setSizePolicy(sizePolicy6)
-#
-#         self.horizontalLayout.addWidget(self.label)
-#
-#         self.savePathTextEdit = QTextEdit(self.saveBlast)
-#         self.savePathTextEdit.setObjectName(u"savePathTextEdit")
-#         sizePolicy7 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-#         sizePolicy7.setHorizontalStretch(0)
-#         sizePolicy7.setVerticalStretch(0)
-#         sizePolicy7.setHeightForWidth(self.savePathTextEdit.sizePolicy().hasHeightForWidth())
-#         self.savePathTextEdit.setSizePolicy(sizePolicy7)
-#         self.savePathTextEdit.setMaximumSize(QSize(16777215, 25))
-#
-#         self.horizontalLayout.addWidget(self.savePathTextEdit)
-#
-#         self.browseButton = QPushButton(self.saveBlast)
-#         self.browseButton.setObjectName(u"browseButton")
-#
-#         self.horizontalLayout.addWidget(self.browseButton)
-#
-#
-#         self.verticalLayout_2.addLayout(self.horizontalLayout)
-#
-#         self.pushButton = QPushButton(self.saveBlast)
-#         self.pushButton.setObjectName(u"pushButton")
-#
-#         self.verticalLayout_2.addWidget(self.pushButton)
-#
-#
-#         self.verticalLayout_4.addWidget(self.saveBlast)
-#
-#         MainWindow.setCentralWidget(self.centralwidget)
-#         self.menubar = QMenuBar(MainWindow)
-#         self.menubar.setObjectName(u"menubar")
-#         self.menubar.setGeometry(QRect(0, 0, 490, 22))
-#         self.menuSettings = QMenu(self.menubar)
-#         self.menuSettings.setObjectName(u"menuSettings")
-#         MainWindow.setMenuBar(self.menubar)
-#         self.statusbar = QStatusBar(MainWindow)
-#         self.statusbar.setObjectName(u"statusbar")
-#         MainWindow.setStatusBar(self.statusbar)
-#
-#         self.menubar.addAction(self.menuSettings.menuAction())
-#
-#         self.retranslateUi(MainWindow)
-#
-#         QMetaObject.connectSlotsByName(MainWindow)
-#     # setupUi
-#
-#     def retranslateUi(self, MainWindow):
-#         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-#         self.playblastGB.setTitle(QCoreApplication.translate("MainWindow", u"Playblast", None))
-#         self.pbCameras.setText(QCoreApplication.translate("MainWindow", u"Select Camera", None))
-#         self.refreshCamerasButton.setText(QCoreApplication.translate("MainWindow", u"Refresh", None))
-#         self.blastSettingsGB.setTitle(QCoreApplication.translate("MainWindow", u"Blast Settings", None))
-#         self.addSettingsButton.setText(QCoreApplication.translate("MainWindow", u"Add", None))
-#         self.pushButton_2.setText(QCoreApplication.translate("MainWindow", u"Remove", None))
-#         self.blastProperties.setTitle(QCoreApplication.translate("MainWindow", u"Output Properties", None))
-#         self.resolutionGB.setTitle(QCoreApplication.translate("MainWindow", u"Resolution", None))
-#         self.lowQuality.setText(QCoreApplication.translate("MainWindow", u"480p", None))
-#         self.hdQuality.setText(QCoreApplication.translate("MainWindow", u"720p", None))
-#         self.fhdQuality.setText(QCoreApplication.translate("MainWindow", u"1080p", None))
-#         self.frameRateGB.setTitle(QCoreApplication.translate("MainWindow", u"Frame Rate", None))
-#         self.fps30.setText(QCoreApplication.translate("MainWindow", u"30fps", None))
-#         self.fps60.setText(QCoreApplication.translate("MainWindow", u"60fps", None))
-#         self.formatGB.setTitle(QCoreApplication.translate("MainWindow", u"Format", None))
-#         self.radioButton.setText(QCoreApplication.translate("MainWindow", u"Avi", None))
-#         self.radioButton_2.setText(QCoreApplication.translate("MainWindow", u"MP4", None))
-#         self.saveBlast.setTitle(QCoreApplication.translate("MainWindow", u"Save Blast", None))
-#         self.label.setText(QCoreApplication.translate("MainWindow", u"Path", None))
-#         self.browseButton.setText(QCoreApplication.translate("MainWindow", u"Browse", None))
-#         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Playblast", None))
-#         self.menuSettings.setTitle(QCoreApplication.translate("MainWindow", u"Settings", None))
-#     # retranslateUi
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if MainWindow.objectName():
@@ -558,10 +282,15 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_11.addWidget(self.aviRB)
 
-        self.mp4RB = QRadioButton(self.formatGB)
-        self.mp4RB.setObjectName(u"mp4RB")
+        self.movRB = QRadioButton(self.formatGB)
+        self.movRB.setObjectName(u"movRB")
 
-        self.horizontalLayout_11.addWidget(self.mp4RB)
+        self.horizontalLayout_11.addWidget(self.movRB)
+
+        self.pngRB = QRadioButton(self.formatGB)
+        self.pngRB.setObjectName(u"pngRB")
+
+        self.horizontalLayout_11.addWidget(self.pngRB)
 
 
         self.horizontalLayout1.addWidget(self.formatGB)
@@ -657,8 +386,9 @@ class Ui_MainWindow(object):
         self.fps30RB.setText(QCoreApplication.translate("MainWindow", u"30fps", None))
         self.fps60RB.setText(QCoreApplication.translate("MainWindow", u"60fps", None))
         self.formatGB.setTitle(QCoreApplication.translate("MainWindow", u"Format", None))
-        self.aviRB.setText(QCoreApplication.translate("MainWindow", u"Avi", None))
-        self.mp4RB.setText(QCoreApplication.translate("MainWindow", u"MP4", None))
+        self.aviRB.setText(QCoreApplication.translate("MainWindow", u".avi", None))
+        self.movRB.setText(QCoreApplication.translate("MainWindow", u".mov", None))
+        self.pngRB.setText(QCoreApplication.translate("MainWindow", u".png Seq", None))
         self.saveBlast.setTitle(QCoreApplication.translate("MainWindow", u"Save Blast", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Path", None))
         self.browseButton.setText(QCoreApplication.translate("MainWindow", u"Browse", None))

@@ -11,7 +11,7 @@ if pbModulePath not in sys.path:
     sys.path.append(pbModulePath)
 
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog,
-                             QPushButton, QTableWidgetItem, QComboBox,
+                             QPushButton, QTableWidgetItem, QComboBox, QCheckBox,
                              QAbstractItemView)
 from PyQt5.QtCore import Qt, QEvent
 
@@ -40,13 +40,13 @@ class PBTool(QMainWindow):
         self.ui.setupUi(self)
 
         # Get Default and Saved UI values from VP JSON file
-        self.defaultVPSettings = PlayblastCore.getDefaultVPSettings()
         self.savedVPSettings = PlayblastCore.getSavedVPSettings()
 
         # Setup UI
         self.ui.settingsTableWidget.verticalHeader().setVisible(False)
         self.ui.browseButton.clicked.connect(self.browseFiles)
         self.ui.savePathTextEdit.setText("C:/temp/DefaultPlayblast")
+        self.populateSettingsTable()
         self.refreshCameraCombobox()
         self.refreshBookmarkComboBox()
         self.radioButtonToggleWidgets()
@@ -62,7 +62,6 @@ class PBTool(QMainWindow):
             self.refreshCameraCombobox)
         self.ui.bookmarkRefreshButton.clicked.connect(
             self.refreshBookmarkComboBox)
-        self.ui.addSettingsButton.clicked.connect(self.populateSettingsTable)
         self.ui.bookmarkRB.toggled.connect(self.radioButtonToggleWidgets)
         self.ui.customRB.toggled.connect(self.radioButtonToggleWidgets)
         self.ui.playblastButton.clicked.connect(self.playblastData)
@@ -105,11 +104,8 @@ class PBTool(QMainWindow):
                 vpTable.setItem(rowPosition, 0, item)
 
                 if self.savedVPSettings[settingName][1] == 'boolean':
-                    toggleItem = QTableWidgetItem('True')
-                    toggleItem.setFlags(
-                        Qt.ItemIsUserCheckable | Qt.ItemIsEnabled)
-                    toggleItem.setCheckState(Qt.Unchecked)
-                    vpTable.setItem(rowPosition, 1, toggleItem)
+                    toggleItem = QCheckBox("Toggle")
+                    vpTable.setCellWidget(rowPosition, 1, toggleItem)
                 if self.savedVPSettings[settingName][1] == 'list':
                     selectValue = QComboBox()
                     selectValue.installEventFilter(self)
@@ -140,6 +136,9 @@ class PBTool(QMainWindow):
         camList = getCameraList()
         for cam in camList:
             self.ui.cameraComboBox.addItem(cam)
+
+        self.ui.cameraComboBox.checkItem('persp')
+
 
     def refreshBookmarkComboBox(self):
         """
@@ -197,6 +196,78 @@ class PBTool(QMainWindow):
 
         return frameRange
 
+    def getFrameRate(self):
+        """
+
+        :return: Int : Frame Rate from the UI
+        """
+        if self.ui.fps30RB.isChecked():
+            return 30
+        if self.ui.fps60RB.isChecked():
+            return 60
+
+    def getExtension(self):
+        """
+
+        :return:
+        """
+        if self.ui.aviRB.isChecked():
+            return "avi"
+        if self.ui.movRB.isChecked():
+            return "qt"
+        if self.ui.pngRB.isChecled():
+            return "image"
+
+    def getResolution(self):
+        """
+
+        :return:
+        """
+        if self.ui.lowQuality.isChecked():
+            return [640, 480]
+        if self.ui.hdQuality.isChecked():
+            return [1280, 720]
+        if self.ui.fhdQuality.isChecked():
+            return [1920, 1080]
+
+    def getVPSettings(self):
+        """
+
+        :return:
+        """
+        tableData = {}
+        vpTable = self.ui.settingsTableWidget
+        for rowPos in range(vpTable.rowCount()):
+            if isinstance(vpTable.cellWidget(rowPos, 1), QCheckBox):
+                tableData[vpTable.item(rowPos, 0).text()] = vpTable.cellWidget(rowPos, 1).isChecked()
+            if isinstance(vpTable.cellWidget(rowPos, 1), QComboBox):
+                tableData[vpTable.item(rowPos, 0).text()] = vpTable.cellWidget(
+                    rowPos, 1).currentText()
+        return tableData
+
+    def createPBName(self, cameraName, frameRange):
+        """
+
+        :return:
+        """
+        scene_name = cmds.file(query=True, sceneName=True, shn=True).split(".")[0] or "Untitled"
+
+        # Sanitize camera name as it can have a ton of special characters which
+        # might not be allowed to use in Windows file names.
+
+        fileName = "{0}_{1}_{2}_{3}".format(scene_name,
+                                            cameraName,
+                                            int(frameRange[0]),
+                                            int(frameRange[1]))
+
+        # ToDo: Sanitize file name to remove special chars
+
+        return fileName
+
+
+
+
+
 
     def playblastData(self):
         """
@@ -206,22 +277,26 @@ class PBTool(QMainWindow):
         cameraList = self.getCheckedCameras()
         frameRangeList = self.getFrameRange()
         filePath = self.getPBFilePath()
-
-        print(filePath)
-        print(cameraList)
-        print(frameRangeList)
+        frameRate = self.getFrameRate()
+        pbFormat = self.getExtension()
+        pbResolution = self.getResolution()
+        vpSettingsUI = self.getVPSettings()
 
         for frameRange in frameRangeList:
             for cam in cameraList:
-                PlayblastCore.doBlast(camera=cam, frameRange=frameRange, )
+                fileName = self.createPBName(cam, frameRange)
+                PlayblastCore.doBlast(camera=cam,
+                                      frameRange=frameRange,
+                                      filePath=filePath,
+                                      fileName=fileName,
+                                      pbResolution=pbResolution,
+                                      format=pbFormat,
+                                      quality=100,
+                                      playPB=True,
+                                      offScreen=False,
+                                      ornaments=False,
+                                      vpSettingsUI=vpSettingsUI)
 
-        # vpSettings = self.getVPSettings()
-        # frameRate = self.getFrameRate()
-
-        # pbFormat = self.getExtension()
-
-        # for camera in cameraList:
-        #     PlayblastCore.doBlast()
 
     def eventFilter(self, source, event):
         """
@@ -270,7 +345,6 @@ def getCameraList():
 
 
 def runPBTool():
-    print(pbModulePath)
     pbwindow = PBTool()
     pbwindow.show()
     return pbwindow
@@ -281,6 +355,5 @@ if __name__ == "__main__":
 
     if not app:
         app = QApplication(sys.argv)
-
     window = runPBTool()
     app.exec_()

@@ -91,6 +91,15 @@
       "exposed": true
     },
     {
+      "property_name": "displayTextures",
+      "name": "Display Textures",
+      "data_type": "boolean",
+      "default_value": true,
+      "current_value": true,
+      "allValues": ["ON", "OFF"],
+      "exposed": true
+    },
+    {
       "property_name": "displayLights",
       "name": "Display Lights",
       "data_type": "list",

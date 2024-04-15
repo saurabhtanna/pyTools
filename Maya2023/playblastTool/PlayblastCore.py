@@ -8,7 +8,6 @@ path = os.path.dirname(__file__)
 with open(os.path.join(path, 'viewportData.json'), 'r') as vpDataFile:
     viewport_settings_data = json.load(vpDataFile)["viewport_settings"]
 
-
 playblastSettings = {
     "filename": ["playblast.mov", "File Name", str],
     "format": ["avi", "Format", str],
@@ -18,6 +17,7 @@ playblastSettings = {
     "off_screen": [False, "Render Off Screen", bool],
     "force_overwrite": [True, "Force Overwrite", bool],
 }
+
 
 # viewportSettings = {
 #     "displayAppearance": ['smoothShaded', "Display Appearance", str,
@@ -39,18 +39,22 @@ playblastSettings = {
 # }
 
 
-def getDefaultVPSettings():
-    defaultSettings = {}
-    for setting in viewport_settings_data:
-        defaultSettings[setting["name"]] = setting["default_value"]
-    return defaultSettings
+# def getDefaultVPSettings():
+#     defaultSettings = {}
+#     for setting in viewport_settings_data:
+#         defaultSettings[setting["name"]] = setting["default_value"]
+#     return defaultSettings
 
 
 def getSavedVPSettings():
+    """
+
+    :return:
+    """
     currUISettings = {}
     for setting in viewport_settings_data:
         if setting["exposed"]:
-            currUISettings[setting["name"]] = [setting["current_value"],
+            currUISettings[setting["name"]] = [setting["default_value"],
                                                setting["data_type"],
                                                setting["allValues"]]
 
@@ -77,35 +81,72 @@ def updateModelEditor(pbModelEditor, vpSettings):
     :return:
     """
     # Applying all the settings to the modelEditor before doing playblast.
-    cmds.modelEditor(pbModelEditor, e=True, grid=vpSettings["grid"][0])
-    cmds.modelEditor(pbModelEditor, e=True, joints=vpSettings["joints"][0])
+    cmds.modelEditor(pbModelEditor, e=True, grid=vpSettings["grid"])
+    cmds.modelEditor(pbModelEditor, e=True, joints=vpSettings["joints"])
     cmds.modelEditor(pbModelEditor, e=True,
-                     nurbsCurves=vpSettings["nurbsCurves"][0])
+                     nurbsCurves=vpSettings["nurbsCurves"])
     cmds.modelEditor(pbModelEditor, e=True,
-                     nurbsSurfaces=vpSettings["nurbsSurfaces"][0])
+                     nurbsSurfaces=vpSettings["nurbsSurfaces"])
     cmds.modelEditor(pbModelEditor, e=True,
-                     displayAppearance=vpSettings["displayAppearance"][0])
+                     displayAppearance=vpSettings["displayAppearance"])
 
     cmds.modelEditor(pbModelEditor, e=True,
-                     displayTextures=vpSettings["displayTextures"][0])
+                     displayTextures=vpSettings["displayTextures"])
 
     cmds.modelEditor(pbModelEditor, e=True,
-                     locators=vpSettings["locators"][0])
+                     locators=vpSettings["locators"])
 
 
 def createCustomHud(hudText=None):
     pass
 
 
-def doBlast(camera, pbSettings, vpSettings, format, frameRange=None):
+def filterSettings(vpSettingsUI):
+    """
+    Combines the UI and default JSON settings.
+    :param vpSettingsUI:
+    :return:
+    """
+    filteredSettings = {}
+    for jSetting in viewport_settings_data:
+        print(jSetting)
+        if jSetting['name'] in vpSettingsUI.keys():
+            filteredSettings[jSetting['property_name']] = vpSettingsUI[
+                jSetting['name']]
+        else:
+            filteredSettings[jSetting['property_name']] = jSetting[
+                'default_value']
+
+    return filteredSettings
+
+
+def doBlast(camera, vpSettingsUI, fileName, filePath, format, frameRange,
+            playPB=True, quality=100, ornaments=True, offScreen=False,
+            pbResolution=[1920, 1080]):
     """
     This function does the following
-    :param playblastSettings:
+    :param frameRange:
+    :param pbSettings:
+    :param camera:
+    :param pbSettings:
     :param format:
     :return:
     """
-    vpSettings = viewportSettings  # For Now
+    vpSettings = filterSettings(vpSettingsUI)
+    # try:
     pbModelEditor = createPlayblastEditor()
     updateModelEditor(pbModelEditor, vpSettings)
-    cmds.modelEditor(pbModelEditor, e=True, av=True)
-    # cmds.playblast(epn=pbModelEditor)
+    # except Exception as e:
+    #     print(e)
+    # cmds.modelEditor(pbModelEditor, e=True, av=True)
+
+    # cmds.playblast(epn=pbModelEditor,
+    #                filename=r'C:\temp\playblast\test',
+    #                format='',
+    #                offScreen=False,
+    #                quality='100',
+    #                startTime=0,
+    #                endTime=200,
+    #                viewer=True,
+    #                useTraxSounds=True,
+    #                )

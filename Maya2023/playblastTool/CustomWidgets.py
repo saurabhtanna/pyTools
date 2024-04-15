@@ -45,6 +45,11 @@ class CheckableCombobox(QComboBox):
                 checkedItemsData.append(self.itemData(i))
         return checkedItemsData
 
+    def checkItem(self, item):
+        for i in range(self.model().rowCount()):
+            if self.model().item(i).text() == item:
+                self.model().item(i).setCheckState(Qt.Checked)
+
     def getCheckedItems(self):
         checkedItems = []
         for i in range(self.model().rowCount()):
