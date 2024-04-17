@@ -31,8 +31,8 @@
       "property_name": "nurbsCurves",
       "name": "Nurbs Curves",
       "data_type": "boolean",
-      "default_value": true,
-      "current_value": true,
+      "default_value": false,
+      "current_value": false,
       "allValues": ["ON", "OFF"],
       "exposed": true
     },
@@ -40,8 +40,8 @@
       "property_name": "nurbsSurfaces",
       "name": "Nurbs Surfaces",
       "data_type": "boolean",
-      "default_value": true,
-      "current_value": true,
+      "default_value": false,
+      "current_value": false,
       "allValues": ["ON", "OFF"],
       "exposed": true
     },
@@ -49,8 +49,8 @@
       "property_name": "manipulators",
       "name": "manipulators",
       "data_type": "boolean",
-      "default_value": true,
-      "current_value": true,
+      "default_value": false,
+      "current_value": false,
       "allValues": ["ON", "OFF"],
       "exposed": true
     },
@@ -61,16 +61,16 @@
       "default_value": true,
       "current_value": true,
       "allValues": ["ON", "OFF"],
-      "exposed": true
+      "exposed": false
     },
     {
       "property_name": "locators",
       "name": "locators",
       "data_type": "boolean",
-      "default_value": true,
-      "current_value": true,
+      "default_value": false,
+      "current_value": false,
       "allValues": ["ON", "OFF"],
-      "exposed": true
+      "exposed": false
     },
     {
       "property_name": "displayAppearance",
@@ -88,7 +88,7 @@
       "default_value": true,
       "current_value": true,
       "allValues": ["ON", "OFF"],
-      "exposed": true
+      "exposed": false
     },
     {
       "property_name": "displayTextures",

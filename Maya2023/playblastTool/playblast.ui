@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>426</width>
-    <height>765</height>
+    <height>849</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -64,6 +64,13 @@
           </widget>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="stitchCheckBox">
+         <property name="text">
+          <string>Signle Multi-Cam Playblast</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -253,6 +260,12 @@
            <verstretch>1</verstretch>
           </sizepolicy>
          </property>
+         <property name="minimumSize">
+          <size>
+           <width>250</width>
+           <height>250</height>
+          </size>
+         </property>
          <property name="showGrid">
           <bool>false</bool>
          </property>
@@ -387,6 +400,36 @@
           </widget>
          </item>
         </layout>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="extraOptionsGB">
+      <property name="title">
+       <string>Extra Options</string>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="QCheckBox" name="offScreenCheckBox">
+         <property name="text">
+          <string>Off Screen Blast</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="openPBCheckBox">
+         <property name="text">
+          <string>Open Playblast</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="ornamentsCheckBox">
+         <property name="text">
+          <string>Show Ornaments</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

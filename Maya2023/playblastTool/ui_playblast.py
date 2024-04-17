@@ -74,6 +74,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_9.addLayout(self.horizontalLayout3)
 
+        self.stitchCheckBox = QCheckBox(self.playblastGB)
+        self.stitchCheckBox.setObjectName(u"stitchCheckBox")
+
+        self.verticalLayout_9.addWidget(self.stitchCheckBox)
 
         self.verticalLayout_11.addWidget(self.playblastGB)
 
@@ -202,6 +206,7 @@ class Ui_MainWindow(object):
         sizePolicy6.setVerticalStretch(1)
         sizePolicy6.setHeightForWidth(self.settingsTableWidget.sizePolicy().hasHeightForWidth())
         self.settingsTableWidget.setSizePolicy(sizePolicy6)
+        self.settingsTableWidget.setMinimumSize(QSize(0, 350))
         self.settingsTableWidget.setShowGrid(False)
 
         self.verticalLayout_7.addWidget(self.settingsTableWidget)
@@ -301,6 +306,27 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_11.addWidget(self.blastProperties)
 
+        self.extraOptionsGB = QGroupBox(self.centralwidget)
+        self.extraOptionsGB.setObjectName(u"extraOptionsGB")
+        self.horizontalLayout_3 = QHBoxLayout(self.extraOptionsGB)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.offScreenCheckBox = QCheckBox(self.extraOptionsGB)
+        self.offScreenCheckBox.setObjectName(u"offScreenCheckBox")
+
+        self.horizontalLayout_3.addWidget(self.offScreenCheckBox)
+
+        self.openPBCheckBox = QCheckBox(self.extraOptionsGB)
+        self.openPBCheckBox.setObjectName(u"openPBCheckBox")
+
+        self.horizontalLayout_3.addWidget(self.openPBCheckBox)
+
+        self.ornamentsCheckBox = QCheckBox(self.extraOptionsGB)
+        self.ornamentsCheckBox.setObjectName(u"ornamentsCheckBox")
+
+        self.horizontalLayout_3.addWidget(self.ornamentsCheckBox)
+
+        self.verticalLayout_11.addWidget(self.extraOptionsGB)
+
         self.saveBlast = QGroupBox(self.centralwidget)
         self.saveBlast.setObjectName(u"saveBlast")
         sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
@@ -362,10 +388,13 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Playblast Tool", None))
         self.playblastGB.setTitle(QCoreApplication.translate("MainWindow", u"Playblast", None))
         self.pbCameras.setText(QCoreApplication.translate("MainWindow", u"Select Camera", None))
         self.refreshCamerasButton.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.stitchCheckBox.setText(QCoreApplication.translate("MainWindow",
+                                                               u"Single Tiled Playblast",
+                                                               None))
         self.FrameRangeGB.setTitle(QCoreApplication.translate("MainWindow", u"Frame Range", None))
         self.rangeSliderRB.setText(QCoreApplication.translate("MainWindow", u"Range Slider", None))
         self.timeSliderRB.setText(QCoreApplication.translate("MainWindow", u"Time Slider", None))
@@ -389,6 +418,15 @@ class Ui_MainWindow(object):
         self.aviRB.setText(QCoreApplication.translate("MainWindow", u".avi", None))
         self.movRB.setText(QCoreApplication.translate("MainWindow", u".mov", None))
         self.pngRB.setText(QCoreApplication.translate("MainWindow", u".png Seq", None))
+        self.extraOptionsGB.setTitle(
+            QCoreApplication.translate("MainWindow", u"Extra Options", None))
+        self.offScreenCheckBox.setText(
+            QCoreApplication.translate("MainWindow", u"Off Screen Blast",
+                                       None))
+        self.openPBCheckBox.setText(
+            QCoreApplication.translate("MainWindow", u"Open Playblast", None))
+        self.ornamentsCheckBox.setText(
+            QCoreApplication.translate("MainWindow", u"Show Ornaments", None))
         self.saveBlast.setTitle(QCoreApplication.translate("MainWindow", u"Save Blast", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Path", None))
         self.browseButton.setText(QCoreApplication.translate("MainWindow", u"Browse", None))

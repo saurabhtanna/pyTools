@@ -1,7 +1,6 @@
-import maya.cmds as cmds
-import sys
-import os
 import inspect
+import os
+import sys
 
 # Get the directory of the currently executing script
 pbModulePath = os.path.dirname(inspect.getfile(inspect.currentframe()))
@@ -10,30 +9,23 @@ pbModulePath = os.path.dirname(inspect.getfile(inspect.currentframe()))
 if pbModulePath not in sys.path:
     sys.path.append(pbModulePath)
 
+import maya.cmds as cmds
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QFileDialog,
-                             QPushButton, QTableWidgetItem, QComboBox, QCheckBox,
-                             QAbstractItemView)
+                             QTableWidgetItem, QComboBox,
+                             QCheckBox, QAbstractItemView, QMessageBox)
 from PyQt5.QtCore import Qt, QEvent
-
 import PlayblastCore
-import ViewPortSettingsWidget
+import ui_playblast
 import importlib
 
-importlib.reload(ViewPortSettingsWidget)
+# ToDO: Remove this when done!!!!
+importlib.reload(ui_playblast)
 importlib.reload(PlayblastCore)
 
 
 class PBTool(QMainWindow):
 
     def __init__(self):
-        myPath = r'C:\Users\saura\pyTools\Maya2023\playblastTool'
-        if myPath not in sys.path:
-            sys.path.append(myPath)
-
-        import ui_playblast
-        import importlib
-        importlib.reload(ui_playblast)
-
         super(PBTool, self).__init__()
 
         self.ui = ui_playblast.Ui_MainWindow()
@@ -55,9 +47,7 @@ class PBTool(QMainWindow):
         self.ui.aviRB.setChecked(True)
         self.ui.timeSliderRB.setChecked(True)
 
-
-
-        #Setup Connections
+        # Setup Connections
         self.ui.refreshCamerasButton.clicked.connect(
             self.refreshCameraCombobox)
         self.ui.bookmarkRefreshButton.clicked.connect(
@@ -82,16 +72,15 @@ class PBTool(QMainWindow):
     def getPBFilePath(self):
         """
         Read PB path and add the playblast name.
-        :return:
+        :return: pbFilePath
         """
         pbFilePath = self.ui.savePathTextEdit.toPlainText()
-
         return pbFilePath
 
     def populateSettingsTable(self, vpSettings=None):
         """
-
-        :param vpSettings:
+        Populate the settings table using the
+        :param vpSettings: dict: dictionary obtained from viewportData.json
         :return:
         """
         vpTable = self.ui.settingsTableWidget
@@ -106,65 +95,69 @@ class PBTool(QMainWindow):
                 if self.savedVPSettings[settingName][1] == 'boolean':
                     toggleItem = QCheckBox("Toggle")
                     vpTable.setCellWidget(rowPosition, 1, toggleItem)
+                    toggleItem.setChecked(self.savedVPSettings[settingName][0])
                 if self.savedVPSettings[settingName][1] == 'list':
                     selectValue = QComboBox()
                     selectValue.installEventFilter(self)
                     selectValue.addItems(self.savedVPSettings[settingName][2])
                     vpTable.setCellWidget(rowPosition, 1, selectValue)
+                    selectValue.setCurrentText(self.savedVPSettings[settingName][0])
 
         vpTable.setEditTriggers(QAbstractItemView.NoEditTriggers)
         vpTable.setSelectionMode(QAbstractItemView.NoSelection)
 
     def radioButtonToggleWidgets(self):
         """
-
-        :return:
+        Handle enable and disabling of certain widgets based on respective
+        radioButtons being checked in the UI.
+        :return: None
         """
         self.ui.bookmarkComboBox.setEnabled(self.ui.bookmarkRB.isChecked())
-        self.ui.bookmarkRefreshButton.setEnabled(self.ui.bookmarkRB.isChecked())
+        self.ui.bookmarkRefreshButton.setEnabled(
+            self.ui.bookmarkRB.isChecked())
         self.ui.startFrameSB.setEnabled(self.ui.customRB.isChecked())
         self.ui.endFrameSB.setEnabled(self.ui.customRB.isChecked())
 
-
     def refreshCameraCombobox(self):
         """
-
-        :param camList:
-        :return:
+        Clears and re-adds camera list to the combobox. Can help when cameras
+        are added or removed to the scene. Also checks the default cameras.
+        :return: None
         """
         self.ui.cameraComboBox.clear()
         camList = getCameraList()
         for cam in camList:
             self.ui.cameraComboBox.addItem(cam)
-
+            # ToDo: Add a way to remember checked cameras before refreshing and
+        #  then check them again in the comboBox.
+        #  This way we can remember user selections pre-refresh.
         self.ui.cameraComboBox.checkItem('persp')
-
 
     def refreshBookmarkComboBox(self):
         """
-
-        :return:
+        Refreshes the contents of bookmark combobox.
+        :return: None
         """
         self.ui.bookmarkComboBox.clear()
         bookmarks = getBookmarksList()
         for bookmark in bookmarks:
-            frameRange = cmds.getAttr(bookmark[1]+".timeRange")
+            frameRange = cmds.getAttr(bookmark[1] + ".timeRange")
             itemString = "{0} {1}".format(bookmark[0], frameRange[0])
             self.ui.bookmarkComboBox.addItem(itemString, bookmark[1])
 
-
     def getCheckedCameras(self):
         """
-
-        :return:
+        Returns the list of checked camera names in the cameraComboBox
+        :return: list(str): List of camera names.
         """
         camList = self.ui.cameraComboBox.getCheckedItems()
         return camList
 
     def getCheckedBookmarks(self):
         """
-
-        :return:
+        Returns the list of checked Bookmarks maya object name from
+        bookmarkComboBox
+        :return: bmList:
         """
         bmList = self.ui.bookmarkComboBox.getCheckedData()
         return bmList
@@ -172,16 +165,14 @@ class PBTool(QMainWindow):
     def getFrameRange(self):
         """
         Checks the frame range mode and finds the range based on the mode.
-        :return:
+        :return: tuple: Tuple of start and end frame.
         """
         frameRange = []
         if self.ui.timeSliderRB.isChecked():
-            print("timeslider")
             startFrame = cmds.playbackOptions(min=True, q=True)
             endFrame = cmds.playbackOptions(max=True, q=True)
             frameRange.append((startFrame, endFrame))
         elif self.ui.rangeSliderRB.isChecked():
-            print("rangeSlider")
             startFrame = cmds.playbackOptions(ast=True, q=True)
             endFrame = cmds.playbackOptions(aet=True, q=True)
             frameRange.append((startFrame, endFrame))
@@ -198,30 +189,32 @@ class PBTool(QMainWindow):
 
     def getFrameRate(self):
         """
-
-        :return: Int : Frame Rate from the UI
+        Check the frameRate radiobutton selection and based on the selection
+        returns the appropriate keyword corresponding to the fps.
+        :return: str : Frame Rate keyword based on the fps selection.
         """
         if self.ui.fps30RB.isChecked():
             return "ntsc"
         if self.ui.fps60RB.isChecked():
             return "ntscf"
 
-    def getExtension(self):
+    def getFormat(self):
         """
-
-        :return:
+        Grabs the extension from the UI based on radiobutton selection.
+        :return: str: extension.
         """
         if self.ui.aviRB.isChecked():
-            return "avi"
+            return "avi", "IYUV codec"
         if self.ui.movRB.isChecked():
-            return "qt"
+            return "qt", "H.264"
         if self.ui.pngRB.isChecled():
-            return "image"
+            return "qt", "png"
 
     def getResolution(self):
         """
-
-        :return:
+        Checks UI for the selected Resolution and returns a list of
+        height and width pixels.
+        :return: list[int]: resolution
         """
         if self.ui.lowQuality.isChecked():
             return [640, 480]
@@ -232,19 +225,31 @@ class PBTool(QMainWindow):
 
     def getVPSettings(self):
         """
-
-        :return:
+        Reads settings name and values from the settingsTableWidget.
+        And returns it as a key value pair.
+        :return: dict: Name Value pair dict.
         """
         tableData = {}
         vpTable = self.ui.settingsTableWidget
         for rowPos in range(vpTable.rowCount()):
             if isinstance(vpTable.cellWidget(rowPos, 1), QCheckBox):
-                tableData[vpTable.item(rowPos, 0).text()] = vpTable.cellWidget(rowPos, 1).isChecked()
+                tableData[vpTable.item(rowPos, 0).text()] = vpTable.cellWidget(
+                    rowPos, 1).isChecked()
             if isinstance(vpTable.cellWidget(rowPos, 1), QComboBox):
                 tableData[vpTable.item(rowPos, 0).text()] = vpTable.cellWidget(
                     rowPos, 1).currentText()
         return tableData
 
+    def getExtraSettings(self):
+        """
+
+        :return:
+        """
+        showOrnaments = self.ui.ornamentsCheckBox.isChecked()
+        offScreen = self.ui.offScreenCheckBox.isChecked()
+        openPB = self.ui.openPBCheckBox.isChecked()
+
+        return showOrnaments, offScreen, openPB
 
     def playblastData(self):
         """
@@ -255,26 +260,40 @@ class PBTool(QMainWindow):
         frameRangeList = self.getFrameRange()
         filePath = self.getPBFilePath()
         frameRate = self.getFrameRate()
-        pbFormat = self.getExtension()
+        pbFormat, compression = self.getFormat()
         pbResolution = self.getResolution()
         vpSettingsUI = self.getVPSettings()
+
+        showOrnaments, offScreenPB, openPB = self.getExtraSettings()
+
+        combineBlasts = self.ui.stitchCheckBox.isChecked()
+
+        # Tile playblast can only work when multiple cameras are selected.
+        if combineBlasts:
+            if len(cameraList) <= 1:
+                msg = "Please select multiple cameras to use this feature."
+                popUpMsgWindow("Error!", msg)
+                return
 
         PlayblastCore.doBlast(cameras=cameraList,
                               frameRangeList=frameRangeList,
                               filePath=filePath,
                               pbResolution=pbResolution,
                               format=pbFormat,
+                              compression=compression,
                               quality=100,
-                              playPB=True,
-                              offScreen=False,
-                              ornaments=False,
+                              playPB=openPB,
+                              offScreen=offScreenPB,
+                              ornaments=showOrnaments,
                               hud=True,
-                              vpSettingsUI=vpSettingsUI)
-
+                              vpSettingsUI=vpSettingsUI,
+                              tilePB=combineBlasts,
+                              frameRate=frameRate,
+                              )
 
     def eventFilter(self, source, event):
         """
-        This event filter is installed on comboboxes inside the QtTable to
+        This event filter is installed on ComboBoxes inside the QtTable to
         prevent auto scrolling when scrolling through the QtTable.
         :param source:
         :param event:
@@ -294,7 +313,8 @@ def getBookmarksList():
     bookmarkNodes = cmds.ls(type='timeSliderBookmark')
     bookmarkData = []
     for bookmarkNode in bookmarkNodes:
-        bookmarkData.append((cmds.getAttr(bookmarkNode + '.name'), bookmarkNode))
+        bookmarkData.append(
+            (cmds.getAttr(bookmarkNode + '.name'), bookmarkNode))
     return bookmarkData
 
 
@@ -318,10 +338,26 @@ def getCameraList():
     return sortedCams
 
 
+def popUpMsgWindow(title="Warning!", message="bleh!"):
+    """
+    When called pops up a QMessageBox with the given title and message.
+    :param title: str.
+    :param message: str.
+    :return: None
+    """
+    msg = QMessageBox()
+    msg.setIcon(QMessageBox.Critical)
+    msg.setText(title)
+    msg.setInformativeText(message)
+    msg.setWindowTitle(title)
+    msg.setStandardButtons(QMessageBox.Ok)
+    msg.exec_()
+
+
 def runPBTool():
-    pbwindow = PBTool()
-    pbwindow.show()
-    return pbwindow
+    pbWindow = PBTool()
+    pbWindow.show()
+    return pbWindow
 
 
 if __name__ == "__main__":

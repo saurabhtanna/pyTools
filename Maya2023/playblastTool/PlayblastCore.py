@@ -1,6 +1,7 @@
 import maya.cmds as cmds
 import json
 import os
+import ffmpegUtils
 
 # Load JSON data from file. Maya looks for the JSON file in its bin folder.
 # To avoid this we provide full path when opening JSON.
@@ -48,7 +49,9 @@ playblastSettings = {
 
 def getSavedVPSettings():
     """
-
+    Grabs the JSON data and simplifies it int a dictionary with name as key and
+    the list of default value, data type and all possible values as the value
+    pair.
     :return:
     """
     currUISettings = {}
@@ -61,14 +64,17 @@ def getSavedVPSettings():
     return currUISettings
 
 
-def createPlayblastEditor(resolution):
+def createPlayblastEditor(resolution=(1920, 1080)):
     """
-    :return:
+    Create the modelEditor and the modelEditorPanel.
+    :param resolution: tuple (int) or list(int): width and height pixels
+    :return: modelEditor and window
     """
     width = resolution[0]
     height = resolution[1]
     window = cmds.window(title='Playblast View', widthHeight=(width, height))
     cmds.paneLayout(configuration="single")
+    # Using a default camera for now.
     modelEditor = cmds.modelEditor(camera="persp")
     cmds.showWindow(window)
     return modelEditor, window
@@ -77,7 +83,8 @@ def createPlayblastEditor(resolution):
 def updateModelEditor(pbModelEditor, vpSettings):
     """
     Updates the ModelEditor with settings passed
-    :param modelEditor:
+    :type vpSettings: object
+    :param pbModelEditor: The modelEditor that needs to be updated.
     :return:
     """
     # Applying all the settings to the modelEditor before doing playblast.
@@ -100,12 +107,14 @@ def updateModelEditor(pbModelEditor, vpSettings):
 def createCustomHud(hudText=None):
     pass
 
+
 def createPBName(cameraName, frameRange):
     """
 
     :return:
     """
-    scene_name = cmds.file(query=True, sceneName=True, shn=True).split(".")[0] or "Untitled"
+    scene_name = cmds.file(query=True, sceneName=True, shn=True).split(".")[
+                     0] or "Untitled"
 
     # Sanitize camera name as it can have a ton of special characters which
     # might not be allowed to use in Windows file names.
@@ -136,6 +145,7 @@ def filterSettings(vpSettingsUI):
 
     return filteredSettings
 
+
 def postPBCleanup(modelEditor, pbWindow, defaultHardwareSettings=None):
     """
 
@@ -146,9 +156,46 @@ def postPBCleanup(modelEditor, pbWindow, defaultHardwareSettings=None):
     cmds.deleteUI(modelEditor)
     cmds.deleteUI(pbWindow)
 
-def doBlast(cameras, vpSettingsUI, filePath, format, frameRangeList,
-            frameRate=30, playPB=True, quality=100, ornaments=True,
-            offScreen=False, pbResolution=[1920, 1080], hud=True ):
+
+def createOutputPath(filePath, frameRange):
+    scene_name = cmds.file(query=True, sceneName=True, shn=True).split(".")[
+                     0] or "Untitled"
+
+    outputFileName = "{0}_{1}_{2}_Combined".format(scene_name, int(frameRange[0]),
+                                               int(frameRange[1]))
+    outputPath = os.path.join(filePath, outputFileName)
+    return outputPath
+
+
+def tilePlayblasts(inputFilePaths, pbFormat, outputPath):
+    """
+
+    :param inputFilePaths:
+    :param pbFormat:
+    :param outputPath:
+    :return:
+    """
+    # Find extension
+    if pbFormat == 'qt':
+        ext = ".mov"
+    if pbFormat == 'avi':
+        ext = ".avi"
+
+    # Adding extension
+    for count in range(len(inputFilePaths)):
+        inputFilePaths[count] = inputFilePaths[count] + ext
+
+    # Adding extension
+    outputPath = outputPath + ext
+
+    ffmpegUtils.stitchTogether(inputFilePaths, outputPath)
+
+
+def doBlast(cameras, vpSettingsUI, filePath, format, compression,
+            frameRangeList, frameRate='ntsc', playPB=True, quality=100,
+            ornaments=True, offScreen=False, pbResolution=[1920, 1080],
+            hud=True,
+            tilePB=False):
     """
     This function does the following
     :param frameRange:
@@ -160,19 +207,23 @@ def doBlast(cameras, vpSettingsUI, filePath, format, frameRangeList,
     """
     vpSettings = filterSettings(vpSettingsUI)
     pbModelEditor, pbWindow = createPlayblastEditor(pbResolution)
-
     updateModelEditor(pbModelEditor, vpSettings)
 
     for frameRange in frameRangeList:
+        allFilePaths = []
+        outputPath = createOutputPath(filePath, frameRange)
         for cam in cameras:
             fileName = createPBName(cam, frameRange)
             cmds.modelEditor(pbModelEditor, e=True, av=True, cam=cam)
+            allFilePaths.append(os.path.join(filePath, fileName))
             try:
                 cmds.playblast(epn=pbModelEditor,
                                filename=os.path.join(filePath, fileName),
                                format=format,
                                offScreen=offScreen,
                                quality=100,
+                               percent=100,
+                               compression=compression,
                                startTime=int(frameRange[0]),
                                endTime=int(frameRange[1]),
                                viewer=playPB,
@@ -181,5 +232,8 @@ def doBlast(cameras, vpSettingsUI, filePath, format, frameRangeList,
                                )
             except Exception as e:
                 print(e)
-
+        if tilePB:
+            tilePlayblasts(allFilePaths, format, outputPath)
     postPBCleanup(pbModelEditor, pbWindow)
+
+
